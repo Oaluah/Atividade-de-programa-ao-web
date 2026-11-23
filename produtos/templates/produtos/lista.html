@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nossos produtos</title>
+  <style>
+    :root { color-scheme: light; --ink: #26352f; --muted: #718078; --green: #39745a; --paper: #f5f7f3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Arial, sans-serif; }
+    header { padding: 42px 22px 34px; text-align: center; background: #e8f0e9; border-bottom: 1px solid #dce7dd; }
+    header p { margin: 0 0 6px; color: var(--green); font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(28px, 5vw, 40px); letter-spacing: -.04em; }
+    .intro { margin: 8px 0 0; color: var(--muted); }
+    main { width: min(1040px, calc(100% - 36px)); margin: 32px auto 56px; }
+    .count { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .card { overflow: hidden; border: 1px solid #e2e8e2; border-radius: 14px; background: white; box-shadow: 0 3px 12px #25382c0a; }
+    .art { display: grid; min-height: 112px; place-items: center; background: #edf3ec; font-size: 42px; }
+    .card:nth-child(3n + 2) .art { background: #f4eee4; }
+    .card:nth-child(3n) .art { background: #edf0f4; }
+    .details { padding: 16px; }
+    .tag { display: inline-block; margin-bottom: 8px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h2 { margin: 0; font-size: 18px; line-height: 1.25; }
+    .description { min-height: 42px; margin: 8px 0 14px; color: var(--muted); font-size: 14px; }
+    .bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .price { color: var(--green); font-size: 20px; font-weight: 700; }
+    .stock { color: var(--muted); font-size: 12px; }
+    .empty { padding: 26px; border: 1px dashed #cbd8ce; border-radius: 12px; color: var(--muted); text-align: center; background: white; }
+    footer { padding: 18px; color: var(--muted); text-align: center; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <p>Vitrine</p>
+    <h1>Nossos produtos</h1>
+    <div class="intro">Uma seleção feita para você.</div>
+  </header>
+  <main>
+    <p class="count">{{ produtos|length }} produto{{ produtos|length|pluralize:"s" }} {% if produtos|length == 1 %}disponível{% else %}disponíveis{% endif %}</p>
+    {% if produtos %}
+      <section class="grid" aria-label="Lista de produtos">
+        {% for produto in produtos %}
+          <article class="card">
+            {% if produto.foto %}<div class="art"><img src="{{ produto.foto.url }}" alt="Foto de {{ produto.nome }}" style="width:100%;height:112px;object-fit:cover"></div>{% else %}<div class="art" aria-hidden="true"></div>{% endif %}
+            <div class="details">
+              {% if produto.categoria %}<span class="tag">{{ produto.categoria.nome }}</span>{% endif %}
+              <h2>{{ produto.nome }}</h2>
+              <p class="description">{% if produto.descricao %}{{ produto.descricao }}{% elif produto.marca %}{{ produto.marca.nome }}{% else %}Um ótimo item para o seu dia a dia.{% endif %}</p>
+              <div class="bottom"><span class="price">R$ {{ produto.preco|floatformat:2 }}</span><span class="stock">{{ produto.quantidade_estoque }} em estoque</span></div>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <div class="empty">Ainda não há produtos cadastrados.</div>
+    {% endif %}
+  </main>
+  <footer>Confira os produtos disponíveis</footer>
+</body>
+</html>
